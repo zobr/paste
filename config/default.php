@@ -19,7 +19,12 @@ return [
         // When using in production, override these with credentials of your
         // choice. Don't use plaintext passwords!
         // These are default credentials.
-        'admin' => password_hash('notsosecure', PASSWORD_BCRYPT),
+        'users' => [
+            'admin' => password_hash('notsosecure', PASSWORD_BCRYPT),
+        ],
+        'routes' => [
+            '/show/all',
+        ],
     ],
     'ip' => [
         // You can use Cisco style IP ranges to block multiple IPs

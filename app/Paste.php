@@ -14,7 +14,7 @@ class Paste extends Entity {
             }
             if (isset($data['dateCreated'])) {
                 unset($this->dateCreated);
-                $this->createdAt = $data['dateCreated'];
+                $this->createdAt = $data['dateCreated']->toDateTime();
             }
         }
         if (!isset($this->uid)) {

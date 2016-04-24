@@ -17,17 +17,11 @@ $app->post('/', function ($req, $res, $args) {
     if (strlen($text) < 2) {
         return $res->withStatus(301)->withHeader('Location', '/');
     }
-    try {
-        $paste = new Paste([
-            'text' => $text,
-            'syntax' => $syntax,
-        ]);
-        $this->pasteRepository->save($paste);
-    } catch (Exception $e) {
-        var_export($e);
-        exit;
-        return $res->withStatus(301)->withHeader('Location', '/');
-    }
+    $paste = new Paste([
+        'text' => $text,
+        'syntax' => $syntax,
+    ]);
+    $this->pasteRepository->save($paste);
     return $res->withStatus(301)->withHeader('Location', '/' . $paste->uid);
 });
 

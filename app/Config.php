@@ -4,33 +4,34 @@ namespace app;
 
 class Config extends Singleton {
 
+    // Config storage
     private $configs;
 
     // The special 'no_entry' value
     private $no_entry;
 
+    // Current environment name
+    public $env;
+
+    const CONFIG_DIR = __DIR__ . '/../config';
+
     public function __construct() {
-        $config_dir = __DIR__ . '/../config';
-        $env = $this->env();
+        // Setup current environment variable
+        $this->env = getenv('APP_ENV') ? getenv('APP_ENV') : 'local';
 
         // Setup the special 'no_entry' value
         $this->no_entry = uniqid('config_no_entry_');
 
         // Load up the default config
         $this->configs = [
-            'default' => require $config_dir . '/default.php',
+            'default' => require self::CONFIG_DIR . '/default.php',
         ];
 
         // Add an environment config
-        $env_config = $config_dir . '/' . $env . '.php';
+        $env_config = self::CONFIG_DIR . '/' . $this->env . '.php';
         if (file_exists($env_config)) {
-            $this->configs[$env] = require $env_config;
+            $this->configs[$this->env] = require $env_config;
         }
-    }
-
-    // Returns current environment
-    public function env() {
-        return getenv('APP_ENV') ? getenv('APP_ENV') : 'local';
     }
 
     // Returns a config entry. Path is a dot-delimited reference to the
@@ -38,7 +39,7 @@ class Config extends Singleton {
     public function get($path = null, $namespace = null) {
         // Default to current environment namespace
         if ($namespace === null) {
-            $namespace = $this->env();
+            $namespace = $this->env;
         }
         // Default to non-existing entry (use a special value)
         $entry = $this->no_entry;

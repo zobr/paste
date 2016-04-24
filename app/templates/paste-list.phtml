@@ -2,8 +2,9 @@
 
 <?php
 $text = '';
+$base_uri = $container->config->get('base_uri');
 foreach ($pastes as $paste) {
-  $text .= $paste->toShortLine() . "\n";
+  $text .= $paste->toShortLine($base_uri) . "\n";
 }
 $text = htmlentities($text, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
 ?>

@@ -13,6 +13,7 @@ Try it out at http://p.smx.lt/
 * Minimal design;
 * Keyboard shortcuts;
 * Syntax highlighting for over 150 languages;
+* Clickable text links;
 * IP blocking and whitelisting;
 * Whitespace trimming;
 * Simple authentication.
@@ -21,7 +22,7 @@ Try it out at http://p.smx.lt/
 ## Pre-requisites
 
 * MongoDB `^3.0`
-* PHP `^5.5`
+* PHP `^5.6`
 
 Important pre-requisite is the newer MongoDB driver. This will install the
 driver on an Ubuntu machine:

@@ -3,7 +3,17 @@
 This is a very simple pastebin with minimal design and support for keyboard
 shortcuts.
 
-It is written in PHP and uses MongoDB.
+It is written in PHP with Slim framework and it uses MongoDB for text storage.
+
+
+## Features
+
+* Minimal design;
+* Keyboard shortcuts;
+* Syntax highlighting for over 150 languages;
+* IP blocking and whitelisting;
+* Whitespace trimming;
+* Simple authentication.
 
 
 ## Pre-requisites
@@ -33,6 +43,14 @@ check your environment.
 
 If you see that server has started, it is ready to use (or to be deployed
 on an end server).
+
+
+## Configuration
+
+You can load different configurations based on `APP_ENV` environment variable.
+Create a copy of the `config/default.php` with the name that you will use in
+`APP_ENV`, then override available options. If option does not exist in config,
+it will be inherited from `config/default.php`.
 
 
 ## Contacts

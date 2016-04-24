@@ -4,37 +4,73 @@ namespace app;
 
 class Config extends Singleton {
 
-    public $config;
+    private $configs;
+
+    // The special 'no_entry' value
+    private $no_entry;
 
     public function __construct() {
-        // Set environment key
         $config_dir = __DIR__ . '/../config';
-        $this->config = require $config_dir . '/default.php';
+        $env = $this->env();
 
-        // Set environment key
-        $env = getenv('APP_ENV') ? getenv('APP_ENV') : 'local';
-        $this->config['env'] = $env;
+        // Setup the special 'no_entry' value
+        $this->no_entry = uniqid('config_no_entry_');
 
-        // Override options by merging with another config
-        if (file_exists($config_dir . '/' . $env . '.php')) {
-            $env_config = require $config_dir . '/' . $env . '.php';
-            foreach ($env_config as $i => $value) {
-                $this->config[$i] = $value;
-            }
+        // Load up the default config
+        $this->configs = [
+            'default' => require $config_dir . '/default.php',
+        ];
+
+        // Add an environment config
+        $env_config = $config_dir . '/' . $env . '.php';
+        if (file_exists($env_config)) {
+            $this->configs[$env] = require $env_config;
         }
     }
 
-    public function get($path = null) {
-        if (!$path) {
-            return $this->config;
+    // Returns current environment
+    public function env() {
+        return getenv('APP_ENV') ? getenv('APP_ENV') : 'local';
+    }
+
+    // Returns a config entry. Path is a dot-delimited reference to the
+    // config entry. E.g.: 'slim.renderer.template_path'.
+    public function get($path = null, $namespace = null) {
+        // Default to current environment namespace
+        if ($namespace === null) {
+            $namespace = $this->env();
         }
-        $levels = explode('.', $path);
-        $entry = $this->config;
-        foreach ($levels as $level) {
-            if (!isset($entry[$level])) {
-                return null;
+        // Default to non-existing entry (use a special value)
+        $entry = $this->no_entry;
+        // Namespace config is not empty
+        if (isset($this->configs[$namespace])) {
+            // Assign the config
+            $config = $this->configs[$namespace];
+            // If no path is specified, whole config is the default.
+            $entry = $config;
+            // Path was specified
+            if ($path !== null) {
+                // Traverse the namespace config
+                $levels = explode('.', $path);
+                foreach ($levels as $level) {
+                    // Nothing to see here
+                    if (!isset($entry[$level])) {
+                        $entry = $this->no_entry;
+                        break;
+                    }
+                    // Go deeper into the config
+                    $entry = $entry[$level];
+                }
             }
-            $entry = $entry[$level];
+        }
+        // Entry not found
+        if ($entry === $this->no_entry) {
+            // Nothing was found
+            if ($namespace === 'default') {
+                throw new Error("Path {$path} does not exist in config!");
+            }
+            // Try with default namespace
+            return $this->get($path, 'default');
         }
         return $entry;
     }

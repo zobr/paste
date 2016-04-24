@@ -1,0 +1,186 @@
+<?php
+
+// Set up a DI container in our views
+global $app;
+$container = $app->getContainer();
+
+?>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title><?= $title ?></title>
+<meta name="robots" content="all">
+<meta name="keywords" content="paste, bin, pastebin, nopaste">
+<?php if (isset($description)) : ?>
+<meta name="description" content="<?= $description . ' A pastebin for your stuff.' ?>">
+<?php else : ?>
+<meta name="description" content="A pastebin for your stuff.">
+<?php endif ?>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<style>
+html, body {
+  height: 100%;
+  background: #fff;
+  margin: 0;
+}
+
+button, select {
+  font-size: 14px;
+}
+
+.container {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  margin: 10px;
+}
+
+a, a:active, a:visited {
+  color: #000;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+.mono {
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.wrap {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.text {
+  margin-top: 0;
+  font-size: 14px;
+}
+
+.text code {
+  background: #fff;
+  margin: 0; padding: 2px;
+  margin-bottom: 16px;
+  overflow: visible;
+}
+
+.hint {
+  font-size: 14px;
+  pointer-events: none;
+  color: #aaa;
+}
+
+@media screen and (max-width: 480px) {
+  .desktop {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 480px) {
+  .mobile {
+    display: none;
+  }
+}
+
+.mono {
+  font-family: monospace;
+}
+
+.form .text {
+  display: block;
+  position: absolute;
+  top: 0; bottom: 36px;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  resize: none;
+  font-size: 14px;
+  background: transparent !important;
+  z-index: 1;
+}
+
+.form .options {
+  position: absolute;
+  bottom: 0; right: 0; left: 0;
+  height: 28px;
+  white-space: nowrap;
+}
+
+.form .options .option {
+  display: inline;
+  height: 28px;
+  vertical-align: baseline;
+}
+
+.form .options .option * {
+  vertical-align: baseline;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.hljs {
+  color: #222 !important;
+}
+</style>
+<script type="text/javascript">
+function linkifyNode(node) {
+  var i, ii;
+  var texts = [];
+  var URL_REGEX = /\bhttps?:\/\/[a-z0-9\.\-_](:\d+)?[^ \n\t<>()\[\]]*/i;
+  for (i = 0, ii = node.childNodes.length; i < ii; i += 1) {
+    if (node.childNodes[i].nodeType === document.ELEMENT_NODE) {
+      linkifyNode(node.childNodes[i]);
+    }
+  }
+  for (i = 0, ii = node.childNodes.length; i < ii; i += 1) {
+    if (node.childNodes[i].nodeType === document.TEXT_NODE) {
+      texts.push(node.childNodes[i]);
+    }
+  }
+  var text, match, leadingNode, anchor, trailing;
+  for (i = 0, ii = texts.length; i < ii; i += 1) {
+    if (texts[i].nodeType === document.ELEMENT_NODE) {
+      linkifyNode(texts[i]);
+    } else if (texts[i].nodeType === document.TEXT_NODE) {
+      while (true) {
+        text = texts[i].nodeValue;
+        match = URL_REGEX.exec(text);
+        if (!match) {
+          break;
+        }
+        leadingNode = document.createTextNode(text.substr(0, match.index));
+        anchor = document.createElement("a");
+        node.replaceChild(leadingNode, texts[i]);
+        anchor.setAttribute('target', '_blank');
+        anchor.href = match[0];
+        anchor.appendChild(document.createTextNode(match[0]));
+        node.insertBefore(anchor, leadingNode.nextSibling);
+        trailing = document.createTextNode(text.substr(match.index
+          + match[0].length));
+        node.insertBefore(trailing, anchor.nextSibling);
+        texts[i] = trailing;
+      }
+    }
+  }
+}
+
+function linkify(el) {
+  el.normalize();
+  linkifyNode(el);
+  return el;
+}
+</script>
+<body>
+<div class="container">

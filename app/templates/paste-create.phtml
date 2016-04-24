@@ -1,0 +1,65 @@
+<?php require __DIR__ . '/layout/header.phtml' ?>
+
+<?php
+$syntax_default = $container->config->get('paste.syntax_default');
+$syntax_list = $container->pasteRepository->getSortedSyntaxList();
+?>
+
+<form class="form" action="/" method="post">
+  <textarea class="text" name="text" placeholder="Paste your text here..."></textarea>
+  <div class="options">
+    <div class="option">
+      <button class="mono" type="submit">submit</button>
+      <span class="mono desktop hint">&nbsp;ctrl+s</span>
+    </div>
+    <div class="option right">
+      <span class="mono desktop">syntax:</span>
+      <select class="mono" name="syntax">
+        <?php foreach ($syntax_list as $syntax) : ?>
+        <?php $selected = ( $syntax_default === $syntax['key'] ) ? 'selected' : '' ?>
+        <option value="<?= $syntax['key'] ?>" <?= $selected ?>><?= $syntax['name'] ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+  </div>
+</form>
+
+<script>
+var FORM_TAGS_REGEX = /input|select|textarea/i;
+var $window = $(window);
+var $form = $('.form');
+var $textarea = $form.find('textarea');
+var $syntax = $form.find('select[name=syntax]');
+var $syntaxDefaultOption = $syntax.find('option').eq(0);
+
+// Swallow backspace keypresses
+$window.bind("keydown keypress", function (e) {
+  var formTag = FORM_TAGS_REGEX.test(e.target.tagName.toLowerCase());
+  if (e.which === 8) {
+    if (!formTag || e.target.disabled || e.target.readOnly) {
+      e.preventDefault();
+    }
+  }
+});
+
+$syntax.keydown(function (e) {
+  if (e.which === 8) {
+    $syntaxDefaultOption.prop('selected', true);
+    e.preventDefault();
+  }
+});
+
+$window.keydown(function (e) {
+  var ctrl = e.metaKey || e.ctrlKey;
+  if (ctrl && e.which === 83 || ctrl && e.which === 13) {
+    $form.submit();
+    e.preventDefault();
+  }
+});
+
+setTimeout(function () {
+  $textarea.focus();
+}, 0);
+</script>
+
+<?php require __DIR__ . '/layout/footer.phtml' ?>

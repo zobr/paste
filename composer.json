@@ -1,0 +1,13 @@
+{
+    "name": "stylemistake/paste",
+    "description": "Simplistic pastebin for your code.",
+    "keywords": ["pastebin"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.0",
+        "slim/slim": "^3.1",
+        "slim/php-view": "^2.0",
+        "mongodb/mongodb": "^1.0.0",
+        "oscarotero/psr7-middlewares": "^3.15"
+    }
+}

@@ -1,0 +1,19 @@
+<?php require __DIR__ . '/layout/header.phtml' ?>
+
+<?php
+$wrap_class = '';
+$syntax = $paste->syntax;
+$text = htmlentities($paste->text, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
+if ($paste->syntax === 'plain') {
+  $syntax = 'hljs nohighlight';
+  $wrap_class = 'wrap';
+}
+?>
+<pre id="code" class="text <?= $wrap_class ?>"><code class="<?= $syntax ?>"><?= $text ?></code></pre>
+
+<script type="text/javascript">
+hljs.initHighlightingOnLoad();
+linkify(document.getElementById('code'));
+</script>
+
+<?php require __DIR__ . '/layout/footer.phtml' ?>

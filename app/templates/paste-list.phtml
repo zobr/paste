@@ -1,0 +1,17 @@
+<?php require __DIR__ . '/layout/header.phtml' ?>
+
+<?php
+$text = '';
+foreach ($pastes as $paste) {
+  $text .= $paste->toShortLine() . "\n";
+}
+$text = htmlentities($text, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
+?>
+<pre id="code" class="text"><code class="hljs nohighlight"><?= $text ?></code></pre>
+
+<script type="text/javascript">
+hljs.initHighlightingOnLoad();
+linkify(document.getElementById('code'));
+</script>
+
+<?php require __DIR__ . '/layout/footer.phtml' ?>

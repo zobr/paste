@@ -8,11 +8,12 @@ $syntax_list = $container->pasteRepository->getSortedSyntaxList();
 <form class="form" action="/" method="post">
   <textarea class="text" name="text" placeholder="Paste your text here..."></textarea>
   <div class="options">
-    <div class="option">
+    <div class="option left">
       <button class="mono" type="submit">submit</button>
-      <span class="mono desktop hint">&nbsp;ctrl+s</span>
+      <span class="mono desktop hint">ctrl+s</span>
     </div>
     <div class="option right">
+      <span class="mono desktop hint">ctrl+p</span>
       <span class="mono desktop">syntax:</span>
       <select class="mono" name="syntax">
         <?php foreach ($syntax_list as $syntax) : ?>
@@ -42,6 +43,7 @@ $window.bind("keydown keypress", function (e) {
   }
 });
 
+// Select default syntax when pressing backspace
 $syntax.keydown(function (e) {
   if (e.which === 8) {
     $syntaxDefaultOption.prop('selected', true);
@@ -49,6 +51,7 @@ $syntax.keydown(function (e) {
   }
 });
 
+// Submit paste when pressing Ctrl+S
 $window.keydown(function (e) {
   var ctrl = e.metaKey || e.ctrlKey;
   if (ctrl && e.which === 83 || ctrl && e.which === 13) {
@@ -57,6 +60,37 @@ $window.keydown(function (e) {
   }
 });
 
+// Open the syntax selector when pressing Ctrl+P
+$window.keydown(function (e) {
+  var ctrl = e.metaKey || e.ctrlKey;
+  if (ctrl && e.which === 80) {
+    $syntax.focus();
+    // var mouseEvent = document.createEvent('MouseEvents');
+    // mouseEvent.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0,
+    //   false, false, false, false, 0, null);
+    // $syntax[0].dispatchEvent(mouseEvent);
+    e.preventDefault();
+  }
+});
+
+// Add spaces when pressing the tab key
+$textarea.keydown(function (e) {
+  if (e.which === 9) {
+    // get caret position/selection
+    var start = this.selectionStart;
+    var end = this.selectionEnd;
+    var $this = $(this);
+    var value = $this.val();
+    // set textarea value to: text before caret + tab + text after caret
+    $this.val(value.substring(0, start) + '  ' + value.substring(end));
+    // put caret at right position again (add one for the tab)
+    this.selectionStart = this.selectionEnd = start + 2;
+    // prevent the focus lose
+    e.preventDefault();
+  }
+});
+
+// Autofocus the textarea
 setTimeout(function () {
   $textarea.focus();
 }, 0);

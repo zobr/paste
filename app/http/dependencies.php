@@ -12,9 +12,9 @@ $container = $app->getContainer();
 // --------------------------------------------------------
 
 // Renderer
-$container['renderer'] = function ($app) {
-    $settings = $app->get('settings')['renderer'];
-    return new PhpRenderer($settings['template_path']);
+$container['renderer'] = function ($container) {
+    $template_path = $container->config->get('slim.renderer.template_path');
+    return new PhpRenderer($template_path);
 };
 
 

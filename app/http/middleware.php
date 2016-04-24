@@ -2,8 +2,6 @@
 
 namespace app;
 
-use \Psr7Middlewares\Middleware;
-
 // Authorization middleware
 $app->add(function ($req, $res, $next) {
     $users = $this->config->get('auth.users');
@@ -26,6 +24,7 @@ $app->add(function ($req, $res, $next) {
     return $next($req, $res);
 });
 
+// IP filtering middleware
 $app->add(function ($req, $res, $next) {
     $real_ip = $_SERVER['REMOTE_ADDR'];
     $blacklist = $this->config->get('ip.blacklist');

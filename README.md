@@ -5,6 +5,8 @@ shortcuts.
 
 It is written in PHP with Slim framework and it uses MongoDB for text storage.
 
+Try it out at http://p.smx.lt/
+
 
 ## Features
 
@@ -57,5 +59,5 @@ it will be inherited from `config/default.php`.
 
 Aleksej Komarov <[stylemistake@gmail.com]>
 
-[stylemistake.com]: http://stylemistake.com
+[stylemistake.com]: http://stylemistake.com/
 [stylemistake@gmail.com]: mailto:stylemistake@gmail.com

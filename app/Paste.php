@@ -16,6 +16,7 @@ class Paste extends Entity {
                 unset($this->dateCreated);
                 $this->createdAt = $data['dateCreated']->toDateTime();
             }
+            $this->version = 3;
         }
         if (!isset($this->uid)) {
             $this->uid = $this->hash();
@@ -26,6 +27,7 @@ class Paste extends Entity {
         if (isset($this->uid)) {
             return $this->uid;
         }
+        $this->stripWhitespace();
         $hash = base64_encode(sha1($this->text, true));
         $hash = str_replace('+', '', $hash);
         $hash = str_replace('/', '', $hash);
@@ -55,6 +57,28 @@ class Paste extends Entity {
             . ' | ' . $pad($this->submitterIp, 15)
             . ' | ' . $pad($this->text, 40);
         return $shortline;
+    }
+
+    public function stripWhitespace() {
+        $text = $this->text;
+        $text = str_replace("\r", '', $text);
+        $text = str_replace("\t", '  ', $text);
+        $lines = explode("\n", $text);
+        $min_indent = null;
+        foreach ($lines as $i => $line) {
+            preg_match('/^(\s+)/', $line, $matches);
+            $indent = strlen($matches[0]);
+            echo $indent . '/';
+            if ($min_indent === null || $indent < $min_indent) {
+                $min_indent = $indent;
+            }
+        }
+        foreach ($lines as $i => $line) {
+            $lines[$i] = substr($line, $min_indent);
+        }
+        $text = implode("\n", $lines);
+        $this->text = trim($text);
+        return $this;
     }
 
 }

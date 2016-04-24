@@ -8,12 +8,16 @@
 /storage
 /node_modules
 /composer.phar
-/config/production.php
+/config/*
+!/config/default.php
 
 
 ## ------------------------------------
 ##  Normally ignored rubbish
 ## ------------------------------------
+
+## Google verification files
+/public/google*
 
 ## IDE files
 .idea

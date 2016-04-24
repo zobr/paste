@@ -4,28 +4,8 @@ namespace app;
 
 class Helper {
 
-    // generate random string
-    public static function getRandString($length = 7) {
-        $ch = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $ch_len = strlen($ch);
-        $out = '';
-        for ($i = 0; $i < $length; $i += 1) {
-            $out .= $ch[mt_rand(0, $ch_len - 1)];
-        }
-        return $out;
-    }
-
-    // generate a fixed length uid hash based on input data
-    public static function getHashString($input, $length = 7) {
-        $hash = base64_encode(sha1($input, true));
-        $hash = str_replace("+", "", $hash);
-        $hash = str_replace("/", "", $hash);
-        $hash = str_replace("=", "", $hash);
-        $hash = substr($hash, 0, $length);
-        return $hash;
-    }
-
-    // match an ip address, cisco-style.
+    // Match an ip address, Cisco-style.
+    // Currently works only with IPv4 addresses.
 
     // matches:
     // xxx.xxx.xxx.xxx        (exact)
@@ -57,12 +37,12 @@ class Helper {
             $ipocts = explode(".",$ip);
             // perform a range match
             for ($i = 0; $i < 4; $i += 1) {
-                if (preg_match("`^\[(\d{1,3}) \- (\d{1,3})\]$`x", $maskocts[$i], $regs)) {
+                if (preg_match("`^\[(\d{1,3}) \- (\d{1,3})\]$`x", @$maskocts[$i], $regs)) {
                     if (($ipocts[$i] > $regs[2]) || ($ipocts[$i] < $regs[1])) {
                         $result = false;
                     }
                 } else {
-                    if ($maskocts[$i] != $ipocts[$i]) {
+                    if (@$maskocts[$i] != @$ipocts[$i]) {
                         $result = false;
                     }
                 }

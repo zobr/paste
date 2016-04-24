@@ -29,7 +29,7 @@ storage:
 build: vendor storage
 
 serve: vendor storage
-	cd public && php -S localhost:3000
+	php -S localhost:3000 -t public
 
 clean:
 	@rm -rf storage

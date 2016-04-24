@@ -25,3 +25,25 @@ $app->add(function ($req, $res, $next) {
     }
     return $next($req, $res);
 });
+
+$app->add(function ($req, $res, $next) {
+    $real_ip = $_SERVER['REMOTE_ADDR'];
+    $blacklist = $this->config->get('ip.blacklist');
+    $whitelist = $this->config->get('ip.whitelist');
+    foreach ($whitelist as $ip) {
+        $match = Helper::matchIpAddr($ip, $real_ip);
+        if ($match) {
+            return $next($req, $res);
+        }
+    }
+    foreach ($blacklist as $ip) {
+        $match = Helper::matchIpAddr($ip, $real_ip);
+        if ($match) {
+            $res->withStatus(403);
+            echo '<pre>You were blacklisted.' . "\n"
+                . 'If it was by mistake, please send me an email.</pre>';
+            exit;
+        }
+    }
+    return $next($req, $res);
+});

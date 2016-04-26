@@ -30,6 +30,7 @@ class Paste extends Entity {
         $hash = str_replace('/', '', $hash);
         $hash = str_replace('=', '', $hash);
         $hash = substr($hash, 0, $length);
+        $this->uid = $hash;
         return $this;
     }
 
@@ -54,7 +55,6 @@ class Paste extends Entity {
         foreach ($lines as $i => $line) {
             preg_match('/^(\s+)/', $line, $matches);
             $indent = strlen($matches[0]);
-            echo $indent . '/';
             if ($min_indent === null || $indent < $min_indent) {
                 $min_indent = $indent;
             }

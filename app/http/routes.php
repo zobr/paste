@@ -48,7 +48,7 @@ $app->get('/{uid}', function ($req, $res, $args) {
     }
     return $this->renderer->render($res, 'paste-show.phtml', [
         'title' => "View paste {$paste->uid}",
-        'description' => "Paste {$paste->uid} in {$paste->syntax}",
+        'description' => "Paste {$paste->uid} in {$paste->syntax}.",
         'paste' => $paste,
     ]);
 });

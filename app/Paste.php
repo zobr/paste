@@ -62,8 +62,11 @@ class Paste extends Entity {
                 $min_indent = $indent;
             }
         }
+        if ($min_indent === null) {
+            $min_indent = 0;
+        }
         foreach ($lines as $i => $line) {
-            $lines[$i] = substr($line, $min_indent ?? 0);
+            $lines[$i] = substr($line, $min_indent);
         }
         $text = implode("\n", $lines);
         $this->text = trim($text);

@@ -49,19 +49,22 @@ class Paste extends Entity {
     public function stripWhitespace() {
         $text = $this->text;
         $text = str_replace("\r", '', $text);
-        $text = str_replace("\t", '    ', $text);
+        $text = str_replace("\t", '  ', $text);
         $lines = explode("\n", $text);
         $min_indent = null;
         foreach ($lines as $i => $line) {
+            if (strlen($line) === 0) {
+                continue;
+            }
             preg_match('/^(\s+)/', $line, $matches);
             $indent = strlen($matches[0]);
             if ($min_indent === null || $indent < $min_indent) {
                 $min_indent = $indent;
             }
         }
-        $lines = array_map(function ($line) use ($min_indent) {
-            return substr($line, $min_indent);
-        }, $lines);
+        foreach ($lines as $i => $line) {
+            $lines[$i] = substr($line, $min_indent ?? 0);
+        }
         $text = implode("\n", $lines);
         $this->text = trim($text);
         return $this;

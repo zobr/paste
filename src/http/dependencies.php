@@ -1,6 +1,6 @@
 <?php
 
-namespace app;
+namespace App;
 
 use \Slim\Views\PhpRenderer;
 
@@ -13,8 +13,8 @@ $container = $app->getContainer();
 
 // Renderer
 $container['renderer'] = function ($container) {
-    $template_path = $container->config->get('slim.renderer.template_path');
-    return new PhpRenderer($template_path);
+  $template_path = $container->config->get('slim.renderer.template_path');
+  return new PhpRenderer($template_path);
 };
 
 
@@ -23,5 +23,4 @@ $container['renderer'] = function ($container) {
 // --------------------------------------------------------
 
 $container['config'] = Config::getFactory();
-$container['mongo'] = Mongo::getFactory();
 $container['pasteRepository'] = PasteRepository::getFactory();

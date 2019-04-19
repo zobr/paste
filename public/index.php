@@ -9,11 +9,11 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
-$app_dir = __DIR__ . '/../app';
+define('__BASE__', realpath(__DIR__ . '/..'));
 
 // App autoloader
 spl_autoload_register(function ($class) {
-    $class = __DIR__ . '/../' . str_replace('\\', '/', $class) . '.php';
+    $class = __BASE__ . '/' . str_replace('\\', '/', $class) . '.php';
     if (file_exists($class)) {
         require_once($class);
     }
@@ -25,19 +25,19 @@ require __DIR__ . '/../vendor/autoload.php';
 session_start();
 
 // Instantiate the app
-$config = \app\Config::getInstance();
+$config = \App\Config::getInstance();
 $app = new \Slim\App([
     'settings' => $config->get('slim'),
 ]);
 
 // Set up dependencies
-require $app_dir . '/http/dependencies.php';
+require __BASE__ . '/src/http/dependencies.php';
 
 // Register middleware
-require $app_dir . '/http/middleware.php';
+require __BASE__ . '/src/http/middleware.php';
 
 // Register routes
-require $app_dir . '/http/routes.php';
+require __BASE__ . '/src/http/routes.php';
 
 // Run app
 $app->run();

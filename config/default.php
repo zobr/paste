@@ -6,13 +6,10 @@
 return [
     'base_uri' => 'http://localhost:3000',
     'slim' => [
-        'displayErrorDetails' => false,
+        'displayErrorDetails' => true,
         'renderer' => [
-            'template_path' => __DIR__ . '/../app/templates/',
+            'template_path' => __BASE__ . '/src/templates/',
         ],
-    ],
-    'mongo' => [
-        'database' => 'paste',
     ],
     'auth' => [
         // '<username>' => '<password_hash>'
@@ -33,14 +30,8 @@ return [
         'blacklist' => [],
     ],
     'paste' => [
-        // paste format version
-        'version' => 3,
         // paste uid length
         'uid_length' => 7,
-        // directory, where pastes are stored
-        'paste_dir' => 'files',
-        // mongo collection name
-        'collection' => 'pastes',
         // default syntax
         'syntax_default' => 'plain',
         // syntax mapping and their aliases

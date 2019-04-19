@@ -3,9 +3,9 @@
 This is a very simple pastebin with minimal design and support for keyboard
 shortcuts.
 
-It is written in PHP with Slim framework and it uses MongoDB for text storage.
+It is written in PHP with Slim framework and it uses SQLite3 for text storage.
 
-Try it out at http://p.smx.lt/
+Try it out at https://p.smx.lt/
 
 
 ## Features
@@ -21,16 +21,8 @@ Try it out at http://p.smx.lt/
 
 ## Pre-requisites
 
-* MongoDB `^3.0`
 * PHP `^5.6`
-
-Important pre-requisite is the newer MongoDB driver. This will install the
-driver on an Ubuntu machine:
-
-```
-sudo pecl install mongodb
-echo "extension=mongodb.so" >> /etc/php5/cli/php.ini
-```
+* SQLite3 extension
 
 
 ## Setup

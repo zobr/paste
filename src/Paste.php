@@ -67,7 +67,9 @@ class Paste extends Entity {
     $text = str_replace("\r", '', $text);
     $text = str_replace("\t", '', $text);
     $text = mb_substr($text, 0, $n);
-    $text = str_pad($text, $n, ' ');
+    // str_pad does not account for multibyte characters
+    $diff = strlen($text) - mb_strlen($text);
+    $text = str_pad($text, $n + $diff, ' ');
     return $text;
   }
 
